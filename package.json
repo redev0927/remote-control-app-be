@@ -1,19 +1,24 @@
 {
   "name": "remote-control-app-be",
-  "version": "1.0.0",
+  "version": "1.0",
   "description": "원격으로 연결하여 제어하는 애플리케이션의 Backend 레포지토리",
-  "main": "index.js",
+  "main": "./server.js",
   "scripts": {
-    "main": "./server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "pkg ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "bin": {
+    "app": "./server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "node-ssh": "^13.1.0"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1",
+    "nodemon": "^2.0.16"
   }
 }

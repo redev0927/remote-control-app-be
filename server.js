@@ -1,8 +1,50 @@
-// node_modules 에 있는 express 관련 파일을 가져온다.
-var express = require("express");
-// express 는 함수이므로, 반환값을 변수에 저장한다.
-var app = express();
-// 3000 포트로 서버 오픈
-app.listen(5000, function () {
-  console.log("start! express server on port 5000");
+const express = require("express");
+const { NodeSSH } = require("node-ssh");
+require("dotenv").config();
+
+const app = express();
+ssh = new NodeSSH();
+const port = process.env.port;
+
+const cors = require("cors");
+
+app.use(
+  cors({
+    // <dev>
+    origin: ["http://localhost:3000"],
+    // <Release> origin: ["http://lastbeatlab.com:8300"],
+  })
+);
+
+app.get("/api", function (req, res) {
+  res.send("<h1>Remote Control App BE Area</h1>");
+});
+
+app.get("/api/control", (req, res) => {
+  ssh
+    .connect({
+      host: process.env.SSH_host,
+      username: process.env.SSH_user,
+      port: process.env.SSH_port,
+      password: process.env.SSH_password,
+    })
+    .then(() => {
+      ssh
+        .execCommand("shutdown -r -t 3", {})
+        .then((result) => {
+          // for Test Code : console.log("제어 성공!");
+          res.send({ message: "success" });
+        })
+        .catch(() => {
+          // for Test Code : console.error("제어 실패!");
+          res.send({ message: "fail" });
+        });
+    })
+    .then(() => {
+      process.on("uncaughtException", function (err) {});
+    });
+});
+
+app.listen(port, function () {
+  console.log("Listen..");
 });
